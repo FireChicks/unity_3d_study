@@ -22,4 +22,12 @@
   ![image](https://github.com/user-attachments/assets/c21e8547-31a8-45b4-bd12-bd6d606a5b6e)
 
 
----
+### 2025년 1월 19일
+- **점프와 회피 구현([3D 쿼터뷰 액션게임 - 플레이어 점프와 회피](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=2))**  
+  - 점프, 회피 애니메이션 설정시 any state 사용
+  - 1회성 애니메이션은 컨디션에 trigger 사용
+  - 지형의 충돌 문제 해결(비벼지는 문제)
+    1. 지형의 속성 static으로 변경 ➞ collision detection-> continuous 를 잘 검출하기 위해
+    2. 지형에 Rigidbody 추가 및, Gravity 제거, is Kinematic 설정 온 ➞「is Kinematic」직접 명령어로 이동시키지 않는 이상 이동하지 않는 설정
+    3. 지형에 Physics Materials 추가
+    4. 구르기 시 줄어드는 속도를 강의와 틀리게 점차 느려지게 코루틴을 사용하여 구현
