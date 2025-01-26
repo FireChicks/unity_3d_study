@@ -9,10 +9,11 @@ public class Player : MonoBehaviour
     public float speed;
 
     public float dodgeSpeed = 0f;
-    public const float JUMP_FORCE = 10;
-    public const float DODGE_FORCE = 15;
-    public const float DODGE_DECREASE_FORCE = 3f;
 
+    public float DODGE_DECREASE_FORCE = 10f;
+    public float JUMP_FORCE = 10;
+    public float DODGE_FORCE = 20;
+    
     private bool isDodgeAvailable = true; // 회피 가능 여부를 제어하는 변수
     private float dodgeCooldown = 1f; // 회피 쿨다운 시간 (초 단위)
 
@@ -84,6 +85,7 @@ public class Player : MonoBehaviour
     void Turn()
     {
         //나아가야할 방향으로 바라보게 하는 함수
+
         transform.LookAt(transform.position + moveVec);
     }
 
@@ -122,9 +124,6 @@ public class Player : MonoBehaviour
         while (NowSpeed() > 15f)
         {
             dodgeSpeed -= DODGE_DECREASE_FORCE;
-            Debug.Log("속도를 줄이는중  speed : " + NowSpeed());
-            isDodge = false;
-
             yield return new WaitForSeconds(0.2f);
         }
 
