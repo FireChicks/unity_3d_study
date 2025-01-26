@@ -30,4 +30,14 @@
     1. 지형의 속성 static으로 변경 ➞ collision detection-> continuous 를 잘 검출하기 위해
     2. 지형에 Rigidbody 추가 및, Gravity 제거, is Kinematic 설정 온 ➞「is Kinematic」직접 명령어로 이동시키지 않는 이상 이동하지 않는 설정
     3. 지형에 Physics Materials 추가
-    4. 구르기 시 줄어드는 속도를 강의와 틀리게 점차 느려지게 코루틴을 사용하여 구현
+    4. (original)구르기 시 한번에 줄어드는 속도를 강의와 틀리게 일정한 감소값을 통해 점차 느려지게 코루틴을 사용하여 구현
+   
+  ![image](https://github.com/user-attachments/assets/c67339a3-3f75-47d6-b505-311c6d415482)
+
+### 2025년 1월 26일
+- **아이템 생성([3D 쿼터뷰 액션게임 - 아이템 만들기](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=3))**  
+  - item들이 공통으로 사용하는 item 스크립트 생성
+  - 사용될 9가지 아이템들의 Prefabs 생성
+  - Light, Particle 생성
+ 
+  ![아이템](https://github.com/user-attachments/assets/5081362c-8bc5-47f9-9641-d35c80592dd3)
