@@ -1374,9 +1374,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 15
   weapons:
-  - {fileID: 184922554}
   - {fileID: 1057834716}
   - {fileID: 807009161}
+  - {fileID: 184922554}
   hasWeapons: 000000
   dodgeSpeed: 0
   DODGE_DECREASE_FORCE: 10

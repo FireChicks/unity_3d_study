@@ -13,6 +13,17 @@ public class Player : MonoBehaviour
     
     public GameObject[] weapons;
     public bool[] hasWeapons;
+    public GameObject[] grenades;
+    public int hasGrenade;
+
+    public int ammo;
+    public int coin;
+    public int health;
+
+    public int MaxAmmo;
+    public int MaxCoin;
+    public int MaxHealth;
+    public int MaxHasGrenade;
 
     public float dodgeSpeed = 0f;
 
@@ -219,7 +230,6 @@ public class Player : MonoBehaviour
     {
         if (iDown && nearObject != null && !isJump)
         {
-            Debug.Log("?");
             if (nearObject.tag == "Weapon")
             {
                 Item item = nearObject.GetComponent<Item>();
@@ -249,14 +259,47 @@ public class Player : MonoBehaviour
         return this.speed + this.dodgeSpeed;
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item"){
+            Item item = other.GetComponent<Item>();
+            switch(item.type){
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if(ammo > MaxAmmo){
+                        ammo = MaxAmmo;
+                    }
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if(coin > MaxCoin){
+                        coin = MaxCoin;
+                    }
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if(health > MaxHealth){
+                        health = MaxHealth;
+                    }
+                    break;
+                case Item.Type.Grenade:
+                    grenades[hasGrenade].SetActive(true);
+                    hasGrenade += item.value;
+                    if(hasGrenade > MaxHasGrenade){
+                        hasGrenade = MaxHasGrenade;
+                    }
+                    break;    
+            }
+            Destroy(other.gameObject);
+        }
+    }
+
     void OnTriggerStay(Collider other)
     {
         if (other.tag == "Weapon")
         {
             nearObject = other.gameObject;
         }
-
-        Debug.Log(nearObject.name);
     }
 
     void OnTriggerExit(Collider other)
