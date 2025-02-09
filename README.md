@@ -41,3 +41,11 @@
   - Light, Particle 생성
  
   ![아이템](https://github.com/user-attachments/assets/5081362c-8bc5-47f9-9641-d35c80592dd3)
+
+### 2025년 2월 02일
+- **아이템 습득과 아이템 스왑([3D 쿼터뷰 액션게임 - 드랍 무기 입수와 교체](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=4))**  
+  - 각 아이템들이 배열을 사용해서 습득 가능하게 변경
+  - 1, 2, 3 숫자키를 이용해서 각 무기 변경 구현
+  - 구르기(회피) 시전시 방향전환 불가능하게 변경
+  - 
+  ![image](https://github.com/user-attachments/assets/0912385a-7c33-4153-9574-007d1d15e082)
