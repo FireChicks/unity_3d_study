@@ -57,3 +57,12 @@
 
   ![image](https://github.com/user-attachments/assets/49fbd64e-d0e8-4138-ae19-7398babe1311)
 
+### 2025년 2월 16일
+- **근접 공격 구현(코루틴 활용)([3D 쿼터뷰 액션게임 - 코루틴으로 근접공격 구현하기](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=6))**  
+  - 해머의 이동경로를 표시하는 트레일 렌더러 추가
+  - 코루틴을 통해 각 시간을 대기해서 일련의 동작을 실행이 가능하도록 구현
+  - Weapon클래스에 근접공격만 구현된 상태
+ 
+  ![image](https://github.com/user-attachments/assets/cb46e98d-2edb-43bc-92b3-6ea85721493b)
+
+
