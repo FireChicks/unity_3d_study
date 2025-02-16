@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     float vAxis;
     bool wDown;
     bool jDown;
+    bool fDown;
 
     //e키가 눌렸을 때
     bool iDown;
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
     bool isJump;
     bool isDodge;
     bool isSwap;
+    bool isFireReady = true;
 
     Vector3 moveVec;
 
@@ -60,9 +62,10 @@ public class Player : MonoBehaviour
     //주변 아이템을 저장하기 위한 변수
     GameObject nearObject;
 
-    GameObject equipWeapon;
+    Weapon equipWeapon;
 
     int equipWeaponIndex = -1;
+    float fireDelay;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -79,6 +82,7 @@ public class Player : MonoBehaviour
         Move();
         Turn();
         Jump();
+        Attack();
         Dodge();
         Swap();
         Interaction();
@@ -96,6 +100,7 @@ public class Player : MonoBehaviour
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
         iDown = Input.GetKeyDown(KeyCode.E);
+        fDown = Input.GetButtonDown("Fire1");
 
         sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
         sDown2 = Input.GetKeyDown(KeyCode.Alpha2);
@@ -111,7 +116,7 @@ public class Player : MonoBehaviour
         //transform == 객체 내부에 들어있는 이동담당
         //Time.deltatTime == 프레임이 일정치 않아도 속도가 똑같게 만드는 값
 
-        if (isSwap)
+        if (isSwap || !isFireReady)
         {
             moveVec = Vector3.zero;
         }
@@ -148,6 +153,23 @@ public class Player : MonoBehaviour
             anim.SetTrigger("doJump");
 
             isJump = true;
+        }
+    }
+
+    void Attack()
+    {
+        if(equipWeapon == null){
+            return;
+        }
+
+        //delay가 쌓임 계속               
+        fireDelay += Time.deltaTime;
+        isFireReady = equipWeapon.rate < fireDelay;
+
+        if(fDown && isFireReady && !isDodge && !isSwap){
+            equipWeapon.Use();
+            anim.SetTrigger("doSwing");
+            fireDelay = 0;
         }
     }
 
@@ -206,12 +228,12 @@ public class Player : MonoBehaviour
         {
             if(equipWeapon !=null) 
             {
-                equipWeapon.SetActive(false);
+                equipWeapon.gameObject.SetActive(false);
             }
             
             equipWeaponIndex = weaponIndex;
-            equipWeapon = weapons[weaponIndex];
-            weapons[weaponIndex].SetActive(true);
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
+            equipWeapon.gameObject.SetActive(true);
 
             anim.SetTrigger("doSwap");
 
