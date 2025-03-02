@@ -65,4 +65,14 @@
  
   ![image](https://github.com/user-attachments/assets/cb46e98d-2edb-43bc-92b3-6ea85721493b)
 
+### 2025년 3월 02일
+- **원거리 공격 구현, 마우스 클릭한 시점으로 캐릭터 시점 이동 구현([3D 쿼터뷰 액션게임 - 원거리공격 구현](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=7))**  
+  - 탄환과 탄피 구현
+  - 트레일 이펙트를 이용한 탄환 발사 구현
+  - 리로드 구현
+  - 벽, 바닥에 부딪혔을 때 사라짐 구현
+ 
+  ![image](https://github.com/user-attachments/assets/ecf653d6-a275-44df-bbd9-b0b2132fac38)
+
+
 
