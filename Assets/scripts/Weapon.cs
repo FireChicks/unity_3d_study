@@ -7,8 +7,15 @@ public class Weapon : MonoBehaviour
     public Type type;
     public int damage;
     public float rate;
+    public int MaxAmmo;
+    public int curAmmo;
     public BoxCollider meleeArea;
     public TrailRenderer trailEffect;
+
+    public Transform bulletPos;
+    public GameObject bullet;
+    public Transform bulletCasePos;
+    public GameObject bulletCase;
 
 
     public void Use()
@@ -18,6 +25,10 @@ public class Weapon : MonoBehaviour
             StopCoroutine("Swing");
             //코루틴 호출
             StartCoroutine("Swing");
+        }
+        else if(type == Type.Range && curAmmo > 0) {
+            curAmmo--;
+            StartCoroutine("Shot");
         }
     }
 
@@ -39,4 +50,23 @@ public class Weapon : MonoBehaviour
         yield break;
     }
 
+    IEnumerator Shot()
+    {
+        //#1. 총알 발사
+        GameObject instantBullet = Instantiate(bullet, bulletPos.position, bulletPos.rotation);
+        Rigidbody bulletRigid = instantBullet.GetComponent<Rigidbody>();
+        bulletRigid.linearVelocity = bulletPos.forward * 50;
+
+
+        yield return null;
+        //#2. 탄피 배출
+        GameObject instantCase = Instantiate(bulletCase, bulletCasePos.position, bulletCasePos.rotation);
+        Rigidbody caseRigid = instantCase.GetComponent<Rigidbody>();
+        //z축의 뒤로 가게 하기 위해 -3~-2로 설정
+        Vector3 caseVec = bulletCasePos.forward * Random.Range(-3, -2) + Vector3.up * Random.Range(2, 3);
+        caseRigid.AddForce(caseVec, ForceMode.Impulse);
+        //탄피 회전
+        caseRigid.AddTorque(Vector3.up * 10, ForceMode.Impulse);                      
+
+    }
 }
