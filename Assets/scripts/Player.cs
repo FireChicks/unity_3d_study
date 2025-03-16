@@ -55,6 +55,7 @@ public class Player : MonoBehaviour
     bool isSwap;
     bool isFireReady = true;
     bool isReload = false;
+    bool isBorder;
 
     Vector3 moveVec;
 
@@ -128,14 +129,18 @@ public class Player : MonoBehaviour
             moveVec = Vector3.zero;
         }
 
-        if (wDown)
-        { //걸을 때
-            transform.position += moveVec * NowSpeed() * 0.3f * Time.deltaTime;
-        }
-        else
+        if(!isBorder)
         {
-            transform.position += moveVec * NowSpeed() * Time.deltaTime;
+            if (wDown)
+            { //걸을 때
+                transform.position += moveVec * NowSpeed() * 0.3f * Time.deltaTime;
+            }
+            else
+            {
+                transform.position += moveVec * NowSpeed() * Time.deltaTime;
+            }
         }
+        
 
         anim.SetBool("isRun", moveVec != Vector3.zero);
         anim.SetBool("isWalk", wDown);
@@ -188,7 +193,7 @@ public class Player : MonoBehaviour
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if(fDown && isFireReady && !isDodge && !isSwap){
+        if(fDown && isFireReady && !isDodge && !isSwap && !isReload){
             equipWeapon.Use();
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
@@ -323,6 +328,23 @@ public class Player : MonoBehaviour
                 Destroy(nearObject);
             }
         }
+    }
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));//Ray가 닿았나 체크
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
     }
 
     void OnCollisionEnter(Collision collision)
