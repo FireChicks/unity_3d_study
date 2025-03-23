@@ -74,7 +74,7 @@
  
   ![image](https://github.com/user-attachments/assets/ecf653d6-a275-44df-bbd9-b0b2132fac38)
 
-  ### 2025년 3월 016일
+  ### 2025년 3월 16일
 - **각종 물리 문제 해결하기 ([3D 쿼터뷰 액션게임 - 플레이어 물리문제 고치기](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=8))**  
   - 플레이어 자동 회전 방지
   - 각 오브젝트들의 충돌 레이어 설정
@@ -83,6 +83,12 @@
  
   ![image](https://github.com/user-attachments/assets/4ee8a8c8-ad99-462e-8685-d1a734b4d105)
 
-
+  ### 2025년 3월 16일
+- **피격 테스터 ([3D 쿼터뷰 액션게임 - 피격 테스터 만들기](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=9))**  
+  - 피격 테스터 구현
+  - 피격 및 넉백 구현
+  - 사망시 레이어 구분을 통해 피격이 이루어지지 않는 알고리즘 구현
+  - 
+  ![image](https://github.com/user-attachments/assets/589478c5-3a0b-4833-9eb2-d28d16f30630)
 
 
