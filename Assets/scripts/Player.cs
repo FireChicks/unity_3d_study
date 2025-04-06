@@ -10,11 +10,12 @@ public class Player : MonoBehaviour
 {
     //public으로 선언시 에디터 내부에서 값을 수정 가능
     public float speed;
-    
+
     public GameObject[] weapons;
     public bool[] hasWeapons;
     public GameObject[] grenades;
     public int hasGrenade;
+    public GameObject grenadeObj;
 
     public Camera followCamera;
 
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     bool wDown;
     bool jDown;
     bool fDown;
+    bool gDown;
 
     bool rDown;
 
@@ -88,6 +90,7 @@ public class Player : MonoBehaviour
         Move();
         Turn();
         Jump();
+        Grenade();
         Attack();
         Reload();
         Dodge();
@@ -108,6 +111,7 @@ public class Player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump");
         iDown = Input.GetKeyDown(KeyCode.E);
         fDown = Input.GetButton("Fire1");
+        gDown = Input.GetButtonDown("Fire2");
         rDown = Input.GetButton("Reload");
 
         sDown1 = Input.GetKeyDown(KeyCode.Alpha1);
@@ -129,7 +133,7 @@ public class Player : MonoBehaviour
             moveVec = Vector3.zero;
         }
 
-        if(!isBorder)
+        if (!isBorder)
         {
             if (wDown)
             { //걸을 때
@@ -140,7 +144,6 @@ public class Player : MonoBehaviour
                 transform.position += moveVec * NowSpeed() * Time.deltaTime;
             }
         }
-        
 
         anim.SetBool("isRun", moveVec != Vector3.zero);
         anim.SetBool("isWalk", wDown);
@@ -152,11 +155,13 @@ public class Player : MonoBehaviour
         transform.LookAt(transform.position + moveVec);
 
         //마우스에 의한 회전
-        if(fDown) {
+        if (fDown)
+        {
             Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit rayHit;
             //out == 반환값을 rayHit에 저장
-            if(Physics.Raycast(ray, out rayHit, 100)){
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
                 Vector3 nextVec = rayHit.point - transform.position;
                 //위아래로 안 움직이게
                 nextVec.y = 0;
@@ -164,7 +169,6 @@ public class Player : MonoBehaviour
                 transform.LookAt(transform.position + nextVec);
             }
         }
-    
     }
 
     void Jump()
@@ -183,17 +187,52 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Attack()
+    void Grenade()
     {
-        if(equipWeapon == null){
+        if (hasGrenade == 0)
+        {
             return;
         }
 
-        //delay가 쌓임 계속               
+        if (gDown && !isReload && !isSwap)
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            //out == 반환값을 rayHit에 저장
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                Vector3 nextVec = rayHit.point - transform.position;
+                //위아래로 안 움직이게
+                nextVec.y = 10;
+
+                GameObject instantGrenade = Instantiate(
+                    grenadeObj,
+                    transform.position,
+                    transform.rotation
+                );
+                Rigidbody rigidGrenade = instantGrenade.GetComponent<Rigidbody>();
+                rigidGrenade.AddForce(nextVec, ForceMode.Impulse);
+                rigidGrenade.AddTorque(Vector3.back * 10, ForceMode.Impulse);
+
+                hasGrenade--;
+                grenades[hasGrenade].SetActive(false);
+            }
+        }
+    }
+
+    void Attack()
+    {
+        if (equipWeapon == null)
+        {
+            return;
+        }
+
+        //delay가 쌓임 계속
         fireDelay += Time.deltaTime;
         isFireReady = equipWeapon.rate < fireDelay;
 
-        if(fDown && isFireReady && !isDodge && !isSwap && !isReload){
+        if (fDown && isFireReady && !isDodge && !isSwap && !isReload)
+        {
             equipWeapon.Use();
             anim.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
@@ -202,33 +241,33 @@ public class Player : MonoBehaviour
 
     void Reload()
     {
-        if(equipWeapon == null)
+        if (equipWeapon == null)
         {
             return;
         }
 
-        if(equipWeapon.type == Weapon.Type.Melee)
+        if (equipWeapon.type == Weapon.Type.Melee)
         {
             return;
         }
 
-        if(ammo == 0)
+        if (ammo == 0)
         {
             return;
         }
 
-        if(rDown && !isJump && !isDodge && !isSwap && isFireReady & !isReload)
+        if (rDown && !isJump && !isDodge && !isSwap && isFireReady & !isReload)
         {
             anim.SetTrigger("doReload");
             isReload = true;
 
             Invoke("ReloadOut", 2f);
         }
-
     }
 
     void ReloadOut()
-    {   Debug.Log("ammo: " + ammo);
+    {
+        Debug.Log("ammo: " + ammo);
         Debug.Log("equipWeapon.MaxAmmo: " + equipWeapon.MaxAmmo);
         int reAmmo = ammo < equipWeapon.MaxAmmo ? ammo : equipWeapon.MaxAmmo;
         Debug.Log("reAmmo: " + reAmmo);
@@ -246,7 +285,7 @@ public class Player : MonoBehaviour
             Debug.Log("회피");
             anim.SetTrigger("doDodge");
             isDodge = true;
-             isDodgeAvailable = false;
+            isDodgeAvailable = false;
 
             StartCoroutine(DodgeOut());
             StartCoroutine(DodgeCooldown());
@@ -275,27 +314,30 @@ public class Player : MonoBehaviour
 
     void Swap()
     {
-        if(sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0))
+        if (sDown1 && (!hasWeapons[0] || equipWeaponIndex == 0))
             return;
 
-        if(sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
+        if (sDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
             return;
 
-        if(sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
+        if (sDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
             return;
 
         int weaponIndex = -1;
-        if(sDown1) weaponIndex = 0;
-        if(sDown2) weaponIndex = 1;
-        if(sDown3) weaponIndex = 2;
+        if (sDown1)
+            weaponIndex = 0;
+        if (sDown2)
+            weaponIndex = 1;
+        if (sDown3)
+            weaponIndex = 2;
 
-        if((sDown1 || sDown2 || sDown3) && !isJump && !isDodge)
+        if ((sDown1 || sDown2 || sDown3) && !isJump && !isDodge)
         {
-            if(equipWeapon !=null) 
+            if (equipWeapon != null)
             {
                 equipWeapon.gameObject.SetActive(false);
             }
-            
+
             equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
             equipWeapon.gameObject.SetActive(true);
@@ -338,7 +380,12 @@ public class Player : MonoBehaviour
     void StopToWall()
     {
         Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
-        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));//Ray가 닿았나 체크
+        isBorder = Physics.Raycast(
+            transform.position,
+            transform.forward,
+            5,
+            LayerMask.GetMask("Wall")
+        ); //Ray가 닿았나 체크
     }
 
     void FixedUpdate()
@@ -365,34 +412,40 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Item"){
+        if (other.tag == "Item")
+        {
             Item item = other.GetComponent<Item>();
-            switch(item.type){
+            switch (item.type)
+            {
                 case Item.Type.Ammo:
                     ammo += item.value;
-                    if(ammo > MaxAmmo){
+                    if (ammo > MaxAmmo)
+                    {
                         ammo = MaxAmmo;
                     }
                     break;
                 case Item.Type.Coin:
                     coin += item.value;
-                    if(coin > MaxCoin){
+                    if (coin > MaxCoin)
+                    {
                         coin = MaxCoin;
                     }
                     break;
                 case Item.Type.Heart:
                     health += item.value;
-                    if(health > MaxHealth){
+                    if (health > MaxHealth)
+                    {
                         health = MaxHealth;
                     }
                     break;
                 case Item.Type.Grenade:
                     grenades[hasGrenade].SetActive(true);
                     hasGrenade += item.value;
-                    if(hasGrenade > MaxHasGrenade){
+                    if (hasGrenade > MaxHasGrenade)
+                    {
                         hasGrenade = MaxHasGrenade;
                     }
-                    break;    
+                    break;
             }
             Destroy(other.gameObject);
         }
