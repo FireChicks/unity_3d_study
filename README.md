@@ -88,7 +88,13 @@
   - 피격 테스터 구현
   - 피격 및 넉백 구현
   - 사망시 레이어 구분을 통해 피격이 이루어지지 않는 알고리즘 구현
-  - 
+ 
   ![image](https://github.com/user-attachments/assets/589478c5-3a0b-4833-9eb2-d28d16f30630)
 
-
+  ### 2025년 3월 16일
+- **수류탄 투척 ([3D 쿼터뷰 액션게임 - 수류탄 구현하기](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=10))**  
+  - 투사체 수류탄 구현
+  - 레이캐스트를 활용한 피격자 정보 가져오기 구현
+  - 피격 종류 구분으로 피격 애니메이션 구분
+    
+  ![image](https://github.com/user-attachments/assets/13739f6b-76fd-4d02-b9f5-7705bacf4f09)
