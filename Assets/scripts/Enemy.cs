@@ -7,7 +7,9 @@ public class Enemy : MonoBehaviour
     public int maxHealth;
     public int curHealth;
     public Transform target;
+    public BoxCollider meleeArea;
     public bool isChase;
+    public bool isAttack;
 
     Rigidbody rigid;
     BoxCollider boxCollider;
@@ -36,9 +38,10 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (isChase)
+        if (nav.enabled)
         {
             nav.SetDestination(target.position);
+            nav.isStopped = !isChase;
         }
     }
 
@@ -52,8 +55,47 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void Targeting()
+    {
+        float targetRadius = 1.5f;
+        float targetRange = 3f;
+
+        RaycastHit[] rayHits = Physics.SphereCastAll(
+            transform.position,
+            targetRadius,
+            transform.forward,
+            targetRange,
+            LayerMask.GetMask("Player")
+        );
+
+        if (rayHits.Length > 0 && !isAttack)
+        {
+            StartCoroutine(Attack());
+        }
+    }
+
+    IEnumerator Attack()
+    {
+        isChase = false;
+        isAttack = true;
+        anim.SetBool("isAttack", isAttack);
+        //공격모션 대기 시간
+        yield return new WaitForSeconds(0.2f);
+        meleeArea.enabled = true;
+
+        yield return new WaitForSeconds(1f);
+        meleeArea.enabled = false;
+
+        yield return new WaitForSeconds(1f);
+
+        isChase = true;
+        isAttack = false;
+        anim.SetBool("isAttack", isAttack);
+    }
+
     void FixedUpdate()
     {
+        Targeting();
         FreezeVelocity();
     }
 
@@ -71,6 +113,7 @@ public class Enemy : MonoBehaviour
         {
             Bullet bullet = other.GetComponent<Bullet>();
             curHealth -= bullet.damage;
+
             Vector3 reactVec = transform.position - other.transform.position;
             Destroy(other.gameObject);
 

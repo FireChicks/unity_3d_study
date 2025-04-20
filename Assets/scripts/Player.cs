@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true;
     bool isReload = false;
     bool isBorder;
+    bool isDamage;
 
     Vector3 moveVec;
 
@@ -66,6 +67,9 @@ public class Player : MonoBehaviour
 
     //animator컨트롤러 정보를 가져오는 인스턴스 변수
     Animator anim;
+
+    //플레이어가 여러개의 메쉬로 이루어져 있기에 배열로 가져오기
+    MeshRenderer[] meshs;
 
     //주변 아이템을 저장하기 위한 변수
     GameObject nearObject;
@@ -81,6 +85,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         //MeshObject에 에니메이션 컨트롤러 정보가 있기에 InChildren붙이기
         anim = GetComponentInChildren<Animator>();
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -449,6 +454,32 @@ public class Player : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
+        else if (other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage;
+                StartCoroutine(OnDamage());
+            }
+        }
+    }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.red;
+        }
+        yield return new WaitForSeconds(1f);
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+
+        isDamage = false;
     }
 
     void OnTriggerStay(Collider other)
