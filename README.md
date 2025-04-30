@@ -111,4 +111,11 @@
   - 플레이어 피격 구현
   - 몬스터 근접 공격 구현
   
-![image](https://github.com/user-attachments/assets/54979a3b-48cd-46bd-99fb-52d3aed89e99)
+  ![image](https://github.com/user-attachments/assets/54979a3b-48cd-46bd-99fb-52d3aed89e99)
+  ### 2025년 4월 30일
+- **다양한 몬스터 만들기(완료) ([3D 쿼터뷰 액션게임 - 목표를 추적하는 AI 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=12))**  
+  - 몬스터B(돌격형) 구현
+  - 몬스터B(원거리형) 구현
+  - 
+  ![image](https://github.com/user-attachments/assets/29044048-fad8-4d21-b4f5-cc986ac8e187)
+
