@@ -1,13 +1,23 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    public enum Type
+    {
+        A,
+        B,
+        C,
+    };
+
+    public Type enemeyType;
     public int maxHealth;
     public int curHealth;
     public Transform target;
     public BoxCollider meleeArea;
+    public GameObject bullet;
     public bool isChase;
     public bool isAttack;
 
@@ -57,8 +67,24 @@ public class Enemy : MonoBehaviour
 
     void Targeting()
     {
-        float targetRadius = 1.5f;
-        float targetRange = 3f;
+        float targetRadius = 0;
+        float targetRange = 0;
+
+        switch (enemeyType)
+        {
+            case Type.A:
+                targetRadius = 1.5f;
+                targetRange = 3f;
+                break;
+            case Type.B:
+                targetRadius = 1f;
+                targetRange = 12f;
+                break;
+            case Type.C:
+                targetRadius = 0.5f;
+                targetRange = 25f;
+                break;
+        }
 
         RaycastHit[] rayHits = Physics.SphereCastAll(
             transform.position,
@@ -79,14 +105,44 @@ public class Enemy : MonoBehaviour
         isChase = false;
         isAttack = true;
         anim.SetBool("isAttack", isAttack);
-        //공격모션 대기 시간
-        yield return new WaitForSeconds(0.2f);
-        meleeArea.enabled = true;
 
-        yield return new WaitForSeconds(1f);
-        meleeArea.enabled = false;
+        switch (enemeyType)
+        {
+            case Type.A:
+                //공격모션 대기 시간
+                yield return new WaitForSeconds(0.2f);
+                meleeArea.enabled = true;
 
-        yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1f);
+                meleeArea.enabled = false;
+
+                yield return new WaitForSeconds(1f);
+                break;
+            case Type.B:
+                //돌격
+                yield return new WaitForSeconds(0.2f);
+                rigid.AddForce(transform.forward * 20, ForceMode.Impulse);
+                meleeArea.enabled = true;
+
+                yield return new WaitForSeconds(0.5f);
+                rigid.linearVelocity = Vector3.zero;
+                meleeArea.enabled = false;
+
+                yield return new WaitForSeconds(2f);
+                break;
+            case Type.C:
+                yield return new WaitForSeconds(0.5f);
+                GameObject instantBullet = Instantiate(
+                    bullet,
+                    transform.position,
+                    transform.rotation
+                );
+                Rigidbody rigidBullet = instantBullet.GetComponent<Rigidbody>();
+                rigidBullet.linearVelocity = transform.forward * 20;
+
+                yield return new WaitForSeconds(2f);
+                break;
+        }
 
         isChase = true;
         isAttack = false;
@@ -146,6 +202,7 @@ public class Enemy : MonoBehaviour
 
             //추적 종료
             isChase = false;
+            isAttack = true;
             nav.enabled = false;
 
             anim.SetTrigger("doDie");
