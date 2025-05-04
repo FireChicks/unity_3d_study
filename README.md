@@ -107,13 +107,22 @@
   ![image](https://github.com/user-attachments/assets/0ab018ca-ae20-4e88-a3bc-11d67312aa60)
 
   ### 2025년 4월 20일
-- **다양한 몬스터 만들기(1/3) ([3D 쿼터뷰 액션게임 - 목표를 추적하는 AI 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=12))**  
+- **다양한 몬스터 만들기(1/3) ([3D 쿼터뷰 액션게임 - 다양한 몬스터 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=12))**  
   - 플레이어 피격 구현
   - 몬스터 근접 공격 구현  
   ![image](https://github.com/user-attachments/assets/54979a3b-48cd-46bd-99fb-52d3aed89e99)
+
   ### 2025년 4월 30일
-- **다양한 몬스터 만들기(완료) ([3D 쿼터뷰 액션게임 - 목표를 추적하는 AI 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=12))**  
+- **다양한 몬스터 만들기(완료) ([3D 쿼터뷰 액션게임 - 다양한 몬스터 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=12))**  
   - 몬스터B(돌격형) 구현
   - 몬스터B(원거리형) 구현
   ![image](https://github.com/user-attachments/assets/29044048-fad8-4d21-b4f5-cc986ac8e187)
+
+  ### 2025년 5월 04일
+- **보스 몬스터 구현 ([3D 쿼터뷰 액션게임 - 다양한 패턴을 구사하는 보스 만들기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=13))**  
+  - 보스 몬스터 패턴 구현(뛰기, 유도 미사일 발사, 돌 굴리기)
+  - 적 스크립트를 상속해서 보스 몬스터 스크립트 구현
+  - 코루틴을 활용한 여러가지 패턴을 랜덤으로 사용
+  ![image](https://github.com/user-attachments/assets/3fae3b56-ceb1-4931-88d1-6ef392eec3dd)
+
 
