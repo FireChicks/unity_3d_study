@@ -82,6 +82,9 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //프레임레이트 60제한(TODO 삭제)
+        Application.targetFrameRate = 60;
+
         rigid = GetComponent<Rigidbody>();
         //MeshObject에 에니메이션 컨트롤러 정보가 있기에 InChildren붙이기
         anim = GetComponentInChildren<Animator>();
@@ -460,27 +463,41 @@ public class Player : MonoBehaviour
             {
                 Bullet enemyBullet = other.GetComponent<Bullet>();
                 health -= enemyBullet.damage;
-                if (other.GetComponent<Rigidbody>() != null)
-                {
-                    Destroy(other.gameObject);
-                }
-                StartCoroutine(OnDamage());
+
+                bool isBossAtk = other.name == "Boss Melee Area";
+                StartCoroutine(OnDamage(isBossAtk));
+            }
+
+            if (other.GetComponent<Rigidbody>() != null)
+            {
+                Destroy(other.gameObject);
             }
         }
     }
 
-    IEnumerator OnDamage()
+    IEnumerator OnDamage(bool isBossAtk)
     {
         isDamage = true;
         foreach (MeshRenderer mesh in meshs)
         {
             mesh.material.color = Color.red;
         }
+
+        if (isBossAtk)
+        {
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse);
+        }
+
         yield return new WaitForSeconds(1f);
 
         foreach (MeshRenderer mesh in meshs)
         {
             mesh.material.color = Color.white;
+        }
+
+        if (isBossAtk)
+        {
+            rigid.linearVelocity = Vector3.zero;
         }
 
         isDamage = false;

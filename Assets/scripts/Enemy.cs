@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Enemy : MonoBehaviour
         A,
         B,
         C,
+        D,
     };
 
     public Type enemeyType;
@@ -20,24 +22,28 @@ public class Enemy : MonoBehaviour
     public GameObject bullet;
     public bool isChase;
     public bool isAttack;
+    public bool isDead;
 
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    Material mat;
-    NavMeshAgent nav;
-    Animator anim;
+    protected Rigidbody rigid;
+    protected BoxCollider boxCollider;
+    protected MeshRenderer[] meshes;
+    protected NavMeshAgent nav;
+    protected Animator anim;
 
+    //자식에선 실행 안됨
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         //메테리얼은 바로 못 가져옴
-        mat = GetComponentInChildren<MeshRenderer>().material;
-        mat.color = Color.white;
+        meshes = GetComponentsInChildren<MeshRenderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
-        Invoke("ChaseStart", 2);
+        if (enemeyType != Type.D)
+        {
+            Invoke("ChaseStart", 2);
+        }
     }
 
     void ChaseStart()
@@ -48,7 +54,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (nav.enabled)
+        if (nav.enabled && enemeyType != Type.D)
         {
             nav.SetDestination(target.position);
             nav.isStopped = !isChase;
@@ -67,36 +73,39 @@ public class Enemy : MonoBehaviour
 
     void Targeting()
     {
-        float targetRadius = 0;
-        float targetRange = 0;
-
-        switch (enemeyType)
+        if (!isDead && enemeyType != Type.D)
         {
-            case Type.A:
-                targetRadius = 1.5f;
-                targetRange = 3f;
-                break;
-            case Type.B:
-                targetRadius = 1f;
-                targetRange = 12f;
-                break;
-            case Type.C:
-                targetRadius = 0.5f;
-                targetRange = 25f;
-                break;
-        }
+            float targetRadius = 0;
+            float targetRange = 0;
 
-        RaycastHit[] rayHits = Physics.SphereCastAll(
-            transform.position,
-            targetRadius,
-            transform.forward,
-            targetRange,
-            LayerMask.GetMask("Player")
-        );
+            switch (enemeyType)
+            {
+                case Type.A:
+                    targetRadius = 1.5f;
+                    targetRange = 3f;
+                    break;
+                case Type.B:
+                    targetRadius = 1f;
+                    targetRange = 12f;
+                    break;
+                case Type.C:
+                    targetRadius = 0.5f;
+                    targetRange = 25f;
+                    break;
+            }
 
-        if (rayHits.Length > 0 && !isAttack)
-        {
-            StartCoroutine(Attack());
+            RaycastHit[] rayHits = Physics.SphereCastAll(
+                transform.position,
+                targetRadius,
+                transform.forward,
+                targetRange,
+                LayerMask.GetMask("Player")
+            );
+
+            if (rayHits.Length > 0 && !isAttack)
+            {
+                StartCoroutine(Attack());
+            }
         }
     }
 
@@ -187,45 +196,61 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade)
     {
-        mat.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-
-        if (curHealth > 0)
+        if (!isDead)
         {
-            mat.color = Color.white;
-        }
-        else
-        {
-            mat.color = Color.gray;
-            //12번 레이어라 12번 지정(Enemy Dead)
-            gameObject.layer = 12;
-
-            //추적 종료
-            isChase = false;
-            isAttack = true;
-            nav.enabled = false;
-
-            anim.SetTrigger("doDie");
-
-            if (isGrenade)
+            foreach (MeshRenderer mesh in meshes)
             {
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up * 3;
+                mesh.material.color = Color.red;
+            }
+            yield return new WaitForSeconds(0.1f);
 
-                //설정되어있는 프리즈 로테이션 해제
-                rigid.freezeRotation = false;
-                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
-                rigid.AddTorque(reactVec * 15, ForceMode.Impulse);
+            if (curHealth > 0)
+            {
+                foreach (MeshRenderer mesh in meshes)
+                {
+                    mesh.material.color = Color.white;
+                }
             }
             else
             {
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up;
-                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
-            }
+                foreach (MeshRenderer mesh in meshes)
+                {
+                    mesh.material.color = Color.gray;
+                }
+                //12번 레이어라 12번 지정(Enemy Dead)
+                gameObject.layer = 12;
 
-            //4초뒤 사라지기
-            Destroy(gameObject, 4);
+                //추적 종료
+                isDead = true;
+                isChase = false;
+                isAttack = true;
+                nav.enabled = false;
+
+                anim.SetTrigger("doDie");
+
+                if (isGrenade)
+                {
+                    reactVec = reactVec.normalized;
+                    reactVec += Vector3.up * 3;
+
+                    //설정되어있는 프리즈 로테이션 해제
+                    rigid.freezeRotation = false;
+                    rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                    rigid.AddTorque(reactVec * 15, ForceMode.Impulse);
+                }
+                else
+                {
+                    reactVec = reactVec.normalized;
+                    reactVec += Vector3.up;
+                    rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                }
+
+                //4초뒤 사라지기
+                if (enemeyType != Type.D)
+                {
+                    Destroy(gameObject, 4);
+                }
+            }
         }
     }
 }
