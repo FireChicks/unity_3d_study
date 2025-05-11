@@ -125,4 +125,12 @@
   - 코루틴을 활용한 여러가지 패턴을 랜덤으로 사용
   ![image](https://github.com/user-attachments/assets/3fae3b56-ceb1-4931-88d1-6ef392eec3dd)
 
+  ### 2025년 5월 11일
+- **UI 구현 ([3D 쿼터뷰 액션게임 - UI 배치하기 ](https://www.youtube.com/watch?v=eZ8Dm809j4c&list=PLO-mt5Iu5TeYkrBzWKuTCl6IUm_bA6BKy&index=14))**  
+  - 앵커를 이용한 UI의 상대적 위치 구현
+  - 체력바 구현
+  - UI 이미지만 구현(실제 게임내 변수와 이어주는 작업 아직 X)
+  ![image](https://github.com/user-attachments/assets/222b093d-05b9-465e-b75b-59eb008d18e4)
+
+
 
